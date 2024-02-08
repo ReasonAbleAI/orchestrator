@@ -9,10 +9,10 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - RABBITMQ_HOST=amqp://guest:guest@my-rabbit:5672/
+      - REDIS_URL=redis://localhost:6379/0
       - OLLAMA_URL=${OLLAMA_URL}
     depends_on:
-      - my-rabbit
+      - my-redis
 
   orchestrator-worker:
     build: .
@@ -22,21 +22,15 @@ services:
     volumes:
       - .:/app
     environment:
-      - RABBITMQ_HOST=amqp://guest:guest@my-rabbit:5672/
+      - REDIS_URL=redis://localhost:6379/0
       - ORCHESTRATOR_WEB_URL=http://orchestrator-web:5000
       - OLLAMA_URL=${OLLAMA_URL}
     depends_on:
-      - my-rabbit
+      - my-redis
 
-  my-rabbit:
-    image: rabbitmq:3-management-alpine
-    container_name: my-rabbit
-    hostname: my-rabbit-host
+  my-redis:
+    image: redis:latest
+    container_name: my-redis
+    hostname: my-redis-host
     ports:
-      - "15672:15672"
-      - "5672:5672"
-    volumes:
-      - rabbit_data:/var/lib/rabbitmq
-
-volumes:
-  rabbit_data:
+      - "6379:6379"
