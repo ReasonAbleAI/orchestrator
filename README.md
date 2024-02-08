@@ -16,7 +16,7 @@ Unlike queries directly against LLMs, the orchestrator will be inquisitive and p
 
 ## Containerized Deployment
 
-Create [`settings.yaml`](https://github.com/Shopify/reasonableai/blob/main/orchestrator/settings.yaml.example) with [semantic networks](https://github.com/Shopify/reasonableai/tree/main/semantic_network), abilities (incoming...), desires of your choosing, and [Ollama API url](https://ollama.ai/).
+Create [`settings.yaml`](https://github.com/Shopify/reasonableai/blob/main/orchestrator/settings.yaml.example) with [semantic networks](https://github.com/Shopify/reasonableai/tree/main/semantic_network), abilities (incoming...), and desires of your choosing.
 
 ```
 semantic_networks:
@@ -34,46 +34,20 @@ desires:
 ollama_url: https://ollama-api.domain.tld
 ```
 
-Example `docker-compose.yaml`
-
+```bash
+$ docker-compose up
 ```
-version: '3'
-services:
-  orchestrator-web:
-    build: .
-    container_name: orchestrator-web
-    hostname: orchestrator-web-host
-    volumes:
-      - .:/app
-    ports:
-      - "5000:5000"
-    environment:
-      - REDIS_URL=redis://localhost:6379/0
-      - OLLAMA_URL=${OLLAMA_URL}
-    depends_on:
-      - my-redis
 
-  orchestrator-worker:
-    build: .
-    command: celery -A celery_app worker
-    container_name: orchestrator-worker
-    hostname: orchestrator-worker-host
-    volumes:
-      - .:/app
-    environment:
-      - REDIS_URL=redis://localhost:6379/0
-      - OLLAMA_URL=${OLLAMA_URL}
-    depends_on:
-      - my-redis
+Pull `mistral:latest` on your Ollama instance.
 
-  my-redis:
-    image: redis:latest
-    container_name: my-redis
-    hostname: my-redis-host
-    ports:
-      - "6379:6379"
-```
+If running Docker container from `docker-compose.yaml`
 
 ```bash
-$ podman-compose up
+$ docker exec -it orchestrator-ollama ollama pull mistral:latest
+```
+
+If running seperate Ollama instance.
+
+```bash
+$ curl http://<your ollama server address>/api/pull -d '{"name": "mistral:latest"}'
 ```
