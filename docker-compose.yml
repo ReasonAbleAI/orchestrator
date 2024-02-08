@@ -1,11 +1,11 @@
 version: '3'
 services:
   orchestrator-web:
-    build: .
+    image: ghcr.io/reasonableai/orchestrator:latest
     container_name: orchestrator-web
     hostname: orchestrator-web-host
     volumes:
-      - .:/app
+      - .settings.yaml:/app/settings.yaml
     ports:
       - "5000:5000"
     environment:
@@ -15,12 +15,12 @@ services:
       - my-redis
 
   orchestrator-worker:
-    build: .
+    image: ghcr.io/reasonableai/orchestrator:latest
     command: celery -A celery_app worker
     container_name: orchestrator-worker
     hostname: orchestrator-worker-host
     volumes:
-      - .:/app
+      - .settings.yaml:/app/settings.yaml
     environment:
       - REDIS_URL=redis://localhost:6379/0
       - OLLAMA_URL=${OLLAMA_URL}
@@ -28,7 +28,7 @@ services:
       - my-redis
 
   flower:
-    build: .
+    image: ghcr.io/reasonableai/orchestrator:latest
     command: celery -A celery_app flower
     container_name: flower
     hostname: flower-host
