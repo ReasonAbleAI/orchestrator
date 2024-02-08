@@ -62,7 +62,6 @@ services:
       - .:/app
     environment:
       - REDIS_URL=redis://localhost:6379/0
-      - ORCHESTRATOR_WEB_URL=http://orchestrator-web:5000
       - OLLAMA_URL=${OLLAMA_URL}
     depends_on:
       - my-redis

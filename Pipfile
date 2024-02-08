@@ -11,12 +11,11 @@ tqdm = "*"
 numpy = "*"
 prettytable = "*"
 celery = "*"
-podman-compose = "*"
-flask-socketio = "*"
 pyyaml = "*"
 gunicorn = "*"
 eventlet = "*"
 redis = "*"
+flower = "*"
 
 [dev-packages]
 

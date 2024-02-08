@@ -23,8 +23,19 @@ services:
       - .:/app
     environment:
       - REDIS_URL=redis://localhost:6379/0
-      - ORCHESTRATOR_WEB_URL=http://orchestrator-web:5000
       - OLLAMA_URL=${OLLAMA_URL}
+    depends_on:
+      - my-redis
+
+  flower:
+    build: .
+    command: celery -A celery_app flower
+    container_name: flower
+    hostname: flower-host
+    ports:
+      - "5555:5555"
+    environment:
+      - REDIS_URL=redis://my-redis:6379/0
     depends_on:
       - my-redis
 
